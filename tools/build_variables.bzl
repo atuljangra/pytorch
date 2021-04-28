@@ -95,6 +95,7 @@ core_sources_common = [
     "torch/csrc/autograd/forward_grad.cpp",
     "torch/csrc/jit/frontend/edit_distance.cpp",
     "torch/csrc/jit/frontend/string_to_type.cpp",
+    "torch/csrc/jit/mobile/model_bytecode_version.cpp",
     "torch/csrc/jit/mobile/type_parser.cpp",
     "torch/csrc/jit/runtime/instruction.cpp",
     "torch/csrc/jit/runtime/jit_exception.cpp",
