@@ -482,33 +482,6 @@ TensorPipeAgent::TensorPipeAgent(
       nameToAddressStore_("addrs", store),
       worldSize_(worldSize),
       processGroup_(std::move(processGroup)) {
-  // register Future factories
-  FutureFactoryRegistry::getInstance().registerFutureFactory(
-      c10::DeviceType::CPU,
-      [](const std::vector<c10::DeviceIndex>& devices)
-          -> std::shared_ptr<JitFuture> {
-        TORCH_INTERNAL_ASSERT(devices.empty());
-        return std::make_shared<JitFuture>(at::AnyClassType::get());
-      });
-
-#ifdef USE_CUDA_NOT_ROCM
-  FutureFactoryRegistry::getInstance().registerFutureFactory(
-      c10::DeviceType::CUDA,
-      [](const std::vector<c10::DeviceIndex>& devices)
-          -> std::shared_ptr<JitFuture> {
-        if (!devices.empty()) {
-          std::vector<c10::Device> fullDevices;
-          fullDevices.reserve(devices.size());
-          for (const c10::DeviceIndex index : devices) {
-            fullDevices.emplace_back(c10::kCUDA, index);
-          }
-          return std::make_shared<at::cuda::CUDAFuture>(
-              at::AnyClassType::get(), std::move(fullDevices));
-        } else {
-          return std::make_shared<JitFuture>(at::AnyClassType::get());
-        }
-      });
-#endif
 
   // collect worker names
   prepareNames();
